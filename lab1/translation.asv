@@ -1,0 +1,47 @@
+% clear
+clc,clear,close all
+
+% read image
+img = imread("alphabet1.jpg");
+[rows, cols, channels] = size(img);
+
+% create blank image
+tsimg = zeros(rows, cols, channels, 'uint8');
+
+% input translate data
+tx = input("Horizontal translation amount:");
+ty = input("Vertical translation amount:");
+
+% create translation matrix
+% TMatrix = [1 0 tx;
+%            0 1 ty; 
+%            0 0 1];
+TMatrix = [1  0  0;
+           0  1  0; 
+           tx ty 1];
+
+% translation
+for i = 1 : rows
+    for j = 1 : cols
+        % translate every pixel
+        p = TMatrix * [i; j; 1];
+        x = p(1,1);
+        y = p(2,1);
+        % copy new img
+        if((x >= 1) && (x <= rows) && (y >= 1) && (y <= cols))
+            for k = 1 : channels
+                tsimg(x, y, k) = img(i, j, k);
+            end
+        end
+    end
+end
+
+% show
+figure;
+subplot(1, 2, 1);
+imshow(img);
+title("original image");
+
+subplot(1, 2, 2);
+imshow(tsimg);
+title("translated image");
